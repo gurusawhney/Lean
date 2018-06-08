@@ -1037,7 +1037,6 @@ namespace QuantConnect
         /// <param name="result">Managed object </param>
         /// <returns>True if successful conversion</returns>
         public static bool TryConvert<T>(this PyObject pyObject, out T result)
-            where T : class
         {
             result = default(T);
 
@@ -1045,12 +1044,12 @@ namespace QuantConnect
             {
                 return true;
             }
-            
+
             using (Py.GIL())
             {
                 try
                 {
-                    result = pyObject.AsManagedObject(typeof(T)) as T;
+                    result = (T) pyObject.AsManagedObject(typeof(T));
 
                     if (typeof(T) == typeof(Type) || result is IEnumerable)
                     {

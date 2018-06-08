@@ -859,6 +859,30 @@ namespace QuantConnect.Algorithm
         }
 
         /// <summary>
+        /// Registers the <paramref name="handler"/> to receive consolidated data for the specified symbol
+        /// </summary>
+        /// <param name="type">The output type of the consolidator</param>
+        /// <param name="symbol">The symbol who's data is to be consolidated</param>
+        /// <param name="period">The consolidation period</param>
+        /// <param name="handler">Data handler receives new consolidated data when generated</param>
+        /// <returns>A new consolidator matching the requested parameters with the handler already registered</returns>
+        public IDataConsolidator Consolidate(PyObject type, Symbol symbol, Resolution period, PyObject handler)
+        {
+            var csType = CreateType(type);
+            if (csType == typeof(TradeBar))
+            {
+                return Consolidate(symbol, period, TickType.Trade, handler.ConvertToDelegate<Action<TradeBar>>());
+            }
+
+            if (csType == typeof(QuoteBar))
+            {
+                return Consolidate(symbol, period, TickType.Quote, handler.ConvertToDelegate<Action<QuoteBar>>());
+            }
+
+            return Consolidate(symbol, period, null, handler.ConvertToDelegate<Action<BaseData>>());
+        }
+
+        /// <summary>
         /// Gets indicator base type
         /// </summary>
         /// <param name="type">Indicator type</param>
