@@ -1611,7 +1611,7 @@ namespace QuantConnect.Algorithm
         /// <returns>A new consolidator matching the requested parameters with the handler already registered</returns>
         public IDataConsolidator Consolidate(Symbol symbol, TimeSpan period, Action<TradeBar> handler)
         {
-            return Consolidate(symbol, period, TickType.Quote, handler);
+            return Consolidate(symbol, period, TickType.Trade, handler);
         }
 
         /// <summary>
